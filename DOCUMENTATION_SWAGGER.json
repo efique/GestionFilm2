@@ -1,0 +1,219 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "This is the API for gestion film",
+    "version": "1.0.0",
+    "title": "Gestion Film API",
+    "contact": {
+      "email": "valentin.barriol@ynov.com"
+    }
+  },
+  "host": "127.0.0.1:8000",
+  "basePath": "/api",
+  "schemes": [
+    "https",
+    "http"
+  ],
+  "paths": {
+    "/film": {
+      "get": {
+        "summary": "searches films",
+        "description": "Return all the films in database\n",
+        "operationId": "searchFilms",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "search films",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Film"
+              }
+            }
+          },
+          "404": {
+            "description": "no film to return"
+          }
+        }
+      },
+      "post": {
+        "summary": "adds a Film",
+        "description": "Adds a film to the system",
+        "operationId": "addFilm",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "film",
+            "description": "Film to add",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/Film"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "film created"
+          },
+          "422": {
+            "description": "somes field are not correct"
+          }
+        }
+      }
+    },
+    "/film/{id}": {
+      "get": {
+        "summary": "search a specific film",
+        "description": "Return a film matching the id in param\n",
+        "operationId": "searchFilm",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Film ID",
+            "required": true,
+            "type": "integer",
+            "minimum": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "search film",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Film"
+              }
+            }
+          },
+          "404": {
+            "description": "no film matching"
+          }
+        }
+      },
+      "put": {
+        "summary": "update a Film",
+        "description": "Update a film from the system",
+        "operationId": "updateFilm",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Film ID",
+            "required": true,
+            "type": "integer",
+            "minimum": 1
+          },
+          {
+            "in": "body",
+            "name": "film",
+            "description": "Film to update",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/Film"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "film updated"
+          },
+          "404": {
+            "description": "no film matching"
+          },
+          "422": {
+            "description": "somes field are not correct"
+          }
+        }
+      },
+      "delete": {
+        "summary": "delete a Film",
+        "description": "Delete a film from the system",
+        "operationId": "deleteFilm",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Film ID",
+            "required": true,
+            "type": "integer",
+            "minimum": 1
+          },
+          {
+            "in": "body",
+            "name": "film",
+            "description": "Film to delete",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/Film"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "film deleted"
+          },
+          "404": {
+            "description": "no film matching"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Film": {
+      "type": "object",
+      "required": [
+        "date",
+        "description",
+        "id",
+        "name"
+      ],
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "id",
+          "example": 3
+        },
+        "name": {
+          "type": "string",
+          "example": "Jurassic Park"
+        },
+        "description": {
+          "type": "string",
+          "example": "Jurassic Park"
+        },
+        "date": {
+          "type": "string",
+          "format": "date-time",
+          "example": "2016-08-29T09:12:33.001+0000"
+        },
+        "note": {
+          "type": "integer",
+          "example": 2
+        }
+      }
+    }
+  }
+}
