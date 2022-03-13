@@ -14,7 +14,7 @@ class Film extends Model
     protected $table = 'films';
 
     protected $fillable = [
-        'name', 'description', 'date', 'note'
+        'name', 'description', 'date', 'note', 'file'
     ];
 
     public function filmCategories()

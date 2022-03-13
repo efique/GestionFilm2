@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use DateTime;
 use App\Models\Film;
+use App\Models\FilmCategory;
 use Illuminate\Http\Request;
 use App\Http\Requests\FilmRequest;
 use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\BaseController;
 
 class FilmController extends BaseController
@@ -61,22 +63,28 @@ class FilmController extends BaseController
      */
     public function store(FilmRequest $request)
     {
-        $film = Film::create($request->all());
+        if($request->hasFile('file') && $request->file('file') != '') {
+            $request->request->add(['file' => $request->file('file')->getClientOriginalName()]);
+        }
+        
+        $film = Film::create($request->input());
 
         if($request->has('film_category_id') && $request->input('film_category_id') != '') {
             if(is_array($request->input('film_category_id'))) {
                 foreach ($request->input('film_category_id') as $key => $category_id) {
                     $filmCategory = FilmCategory::find($category_id);
 
-                    $film->associate($filmCategory);
-                    $film->save();
+                    $film->filmCategories()->save($filmCategory);
                 }
             } else  {
                 $filmCategory = FilmCategory::find($request->input('film_category_id'));
 
-                $film->associate($filmCategory);
-                $film->save();
+                $film->filmCategories()->save($filmCategory);
             }
+        }
+        
+        if($request->hasFile('file') && $request->file('file') != '') {
+            Storage::disk('local')->put($request->file('file')->getClientOriginalName(), 'Contents');
         }
 
         return $this->sendCreated($film, 'Film Created Successfully');
@@ -93,6 +101,10 @@ class FilmController extends BaseController
      */
     public function update(FilmRequest $request, $id)
     {
+        if($request->hasFile('file') && $request->file('file') != '') {
+            $request->request->add(['file' => $request->file('file')->getClientOriginalName()]);
+        }
+        
         $film = Film::find($id);
 
         if($film == null) {
@@ -106,15 +118,17 @@ class FilmController extends BaseController
                 foreach ($request->input('film_category_id') as $key => $category_id) {
                     $filmCategory = FilmCategory::find($category_id);
 
-                    $film->associate($filmCategory);
-                    $film->save();
+                    $film->filmCategories()->save($filmCategory);
                 }
             } else  {
                 $filmCategory = FilmCategory::find($request->input('film_category_id'));
 
-                $film->associate($filmCategory);
-                $film->save();
+                $film->filmCategories()->save($filmCategory);
             }
+        }
+
+        if($request->hasFile('file') && $request->file('file') != '') {
+            Storage::disk('local')->put($request->file('file')->getClientOriginalName(), 'Contents');
         }
 
         return $this->sendResponse($film, 'Film Information has been updated');
